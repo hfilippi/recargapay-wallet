@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,11 @@ import com.hfilippi.wallet.model.WalletBalanceHistory;
 import com.hfilippi.wallet.model.dto.BalanceDto;
 import com.hfilippi.wallet.service.WalletService;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.PastOrPresent;
+
 /**
  * Rest Controller for de API.
  * 
@@ -29,6 +35,7 @@ import com.hfilippi.wallet.service.WalletService;
 
 @RestController
 @RequestMapping(value = "/recargapay/v1/wallet")
+@Validated
 public class WalletController {
 
 	private WalletService walletService;
@@ -37,42 +44,55 @@ public class WalletController {
 		this.walletService = walletService;
 	}
 
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Wallet created OK."),
+			@ApiResponse(responseCode = "409", description = "Wallet already exist") })
 	@PostMapping
-	public Wallet createWallet(@RequestParam(name = "user_email", required = true) String userEmail)
+	public Wallet createWallet(@RequestParam(name = "user_email", required = true) @Email String userEmail)
 			throws DuplicateWalletException {
 		return this.walletService.createWallet(userEmail);
 	}
 
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Balance retrived OK."),
+			@ApiResponse(responseCode = "404", description = "Wallet not found") })
 	@GetMapping("/balance/{userEmail}")
-	public BalanceDto getBalance(@PathVariable String userEmail) throws WalletNotFoundException {
+	public BalanceDto getBalance(@PathVariable @Email String userEmail) throws WalletNotFoundException {
 		return this.walletService.getBalance(userEmail);
 	}
 
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Deposit OK."),
+			@ApiResponse(responseCode = "404", description = "Wallet not found") })
 	@PutMapping("/deposit")
-	public Wallet deposit(@RequestParam(name = "user_email", required = true) String userEmail,
+	public Wallet deposit(@RequestParam(name = "user_email", required = true) @Email String userEmail,
 			@RequestParam(required = true) BigDecimal amount) throws WalletNotFoundException {
 		return this.walletService.deposit(userEmail, amount);
 	}
 
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Withdraw OK."),
+			@ApiResponse(responseCode = "404", description = "Wallet not found"),
+			@ApiResponse(responseCode = "409", description = "Insufficient funds") })
 	@PutMapping("/withdraw")
-	public Wallet withdraw(@RequestParam(name = "user_email", required = true) String userEmail,
+	public Wallet withdraw(@RequestParam(name = "user_email", required = true) @Email String userEmail,
 			@RequestParam(required = true) BigDecimal amount)
 			throws WalletNotFoundException, InsufficientFundsException {
 		return this.walletService.withdraw(userEmail, amount);
 	}
 
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Transfer OK."),
+			@ApiResponse(responseCode = "404", description = "Wallet not found"),
+			@ApiResponse(responseCode = "409", description = "Insufficient funds") })
 	@PutMapping("/transfer")
-	public Wallet transfer(@RequestParam(name = "user_email_from", required = true) String userEmailFrom,
-			@RequestParam(name = "user_email_to", required = true) String userEmailTo,
+	public Wallet transfer(@RequestParam(name = "user_email_from", required = true) @Email String userEmailFrom,
+			@RequestParam(name = "user_email_to", required = true) @Email String userEmailTo,
 			@RequestParam(required = true) BigDecimal amount)
 			throws WalletNotFoundException, InsufficientFundsException {
 		return this.walletService.transfer(userEmailFrom, userEmailTo, amount);
 	}
 
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Get balance history OK.") })
 	@GetMapping("/history")
 	public List<WalletBalanceHistory> getBalanceHistory(
-			@RequestParam(name = "user_email", required = true) String userEmail,
-			@RequestParam(name = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFrom) {
+			@RequestParam(name = "user_email", required = true) @Email String userEmail,
+			@RequestParam(name = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") @PastOrPresent Date dateFrom) {
 		return this.walletService.getBalanceHistory(userEmail, dateFrom);
 	}
 

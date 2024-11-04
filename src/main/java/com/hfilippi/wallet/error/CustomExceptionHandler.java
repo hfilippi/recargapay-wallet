@@ -18,12 +18,12 @@ public class CustomExceptionHandler {
 
 	@ExceptionHandler(DuplicateWalletException.class)
 	public ResponseEntity<ErrorMessage> duplicateWalletExceptionHandler(Exception ex, WebRequest request) {
-		return this.buildErrorResponse(ex, request, HttpStatus.BAD_REQUEST);
+		return this.buildErrorResponse(ex, request, HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(InsufficientFundsException.class)
 	public ResponseEntity<ErrorMessage> insufficientFundsExceptionHandler(Exception ex, WebRequest request) {
-		return this.buildErrorResponse(ex, request, HttpStatus.BAD_REQUEST);
+		return this.buildErrorResponse(ex, request, HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(Exception.class)
