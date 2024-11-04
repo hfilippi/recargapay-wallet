@@ -59,7 +59,7 @@ mvn test
 ```
 
 ## Limitations
-Due to time constraints, only two unit tests were implemented.
+Due to time constraints, only three unit tests were implemented.
 
 ## Authors
 [Horacio Filippi](mailto:hfilippi@gmail.com)
