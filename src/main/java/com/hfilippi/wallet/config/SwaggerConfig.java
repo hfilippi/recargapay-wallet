@@ -27,7 +27,7 @@ public class SwaggerConfig {
 	OpenAPI customOpenAPI() {
 		// @formatter:off
 		return new OpenAPI().info(new Info()
-				.title("recargapay Wallet Service")
+				.title("RecargaPay Wallet Service")
 				.version("1.0.0"));
 		// @formatter:on
 	}
