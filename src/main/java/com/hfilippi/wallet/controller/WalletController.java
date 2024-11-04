@@ -22,13 +22,14 @@ import com.hfilippi.wallet.model.WalletBalanceHistory;
 import com.hfilippi.wallet.model.dto.BalanceDto;
 import com.hfilippi.wallet.service.WalletService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.PastOrPresent;
 
 /**
- * Rest Controller for de API.
+ * Rest Controller for API.
  * 
  * @author hfilippi
  */
@@ -44,6 +45,7 @@ public class WalletController {
 		this.walletService = walletService;
 	}
 
+	@Operation(description = "Allow the creation of wallets for users.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Wallet created OK."),
 			@ApiResponse(responseCode = "409", description = "Wallet already exist") })
 	@PostMapping
@@ -52,6 +54,7 @@ public class WalletController {
 		return this.walletService.createWallet(userEmail);
 	}
 
+	@Operation(description = "Retrieve the current balance of a user's wallet.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Balance retrived OK."),
 			@ApiResponse(responseCode = "404", description = "Wallet not found") })
 	@GetMapping("/balance/{userEmail}")
@@ -59,6 +62,7 @@ public class WalletController {
 		return this.walletService.getBalance(userEmail);
 	}
 
+	@Operation(description = "Enable users to deposit money into their wallets.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Deposit OK."),
 			@ApiResponse(responseCode = "404", description = "Wallet not found") })
 	@PutMapping("/deposit")
@@ -67,6 +71,7 @@ public class WalletController {
 		return this.walletService.deposit(userEmail, amount);
 	}
 
+	@Operation(description = "Enable users to withdraw money from their wallets.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Withdraw OK."),
 			@ApiResponse(responseCode = "404", description = "Wallet not found"),
 			@ApiResponse(responseCode = "409", description = "Insufficient funds") })
@@ -77,6 +82,7 @@ public class WalletController {
 		return this.walletService.withdraw(userEmail, amount);
 	}
 
+	@Operation(description = "Facilitate the transfer of money between user wallets.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Transfer OK."),
 			@ApiResponse(responseCode = "404", description = "Wallet not found"),
 			@ApiResponse(responseCode = "409", description = "Insufficient funds") })
@@ -88,6 +94,7 @@ public class WalletController {
 		return this.walletService.transfer(userEmailFrom, userEmailTo, amount);
 	}
 
+	@Operation(description = "Retrieve the balance of a user's wallet at a specific point in the past.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Get balance history OK.") })
 	@GetMapping("/history")
 	public List<WalletBalanceHistory> getBalanceHistory(
