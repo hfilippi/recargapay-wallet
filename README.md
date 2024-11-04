@@ -26,9 +26,9 @@ http://localhost:8080/swagger-ui/index.html
 ```
 
 ## Installation
-- You need Java 17 installed in your system.
-- You need Maven 3+ installed in your system.
-- (Optional) You need Docker installed in your system.
+- You need Java 17 installed on your system.
+- You need Maven 3+ installed on your system.
+- (Optional) You need Docker installed on your system.
 - Clone the repository and download the code with this command:
 
 ```sh
