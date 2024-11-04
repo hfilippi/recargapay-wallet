@@ -18,8 +18,6 @@ The application is designed as a Rest API, using Java 17, SpringBoot 3 and Maven
 
 At the design level, a Controller was implemented that has all the required operations listed above. This Controller connects to a Service that implements all operations and uses a Repository to connect to an in-memory database (H2), thus optimizing response times.
 
-Due to time constraints, only two unit tests were implemented.
-
 ## Documentation
 With the app running, visit the Swagger web page:
 
@@ -59,6 +57,9 @@ To run the unit tests, in the root path of the project, execute the following co
 ```sh
 mvn test
 ```
+
+## Limitations
+Due to time constraints, only two unit tests were implemented.
 
 ## Authors
 [Horacio Filippi](mailto:hfilippi@gmail.com)
